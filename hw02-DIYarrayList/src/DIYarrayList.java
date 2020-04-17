@@ -1,66 +1,139 @@
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DIYarrayList<T> implements List<T> {
+    private Object[] data;
+    //длина занятой части массива
+    private int size;
+    private Iterator iterator;
 
-    public static <T> boolean addAll(Collection<? super T> c, T... elements) {
-        //Помещаем все элементы в типизированный массив mas
-        T[] mas = elements;
-        int count_mas = mas.length;
+    private class DIYiterator<T> implements Iterator {
+        int cursor=0;
+        int size;
+        Object[] data;
 
-        //Добавляем все элементы в типизированную коллекцию
-        for (int i=0; i< count_mas; i++) {
-            c.add(mas[i]);
+        public DIYiterator(DIYarrayList<T> diYarrayList) {
+            this.size = diYarrayList.size();
+            this.data= diYarrayList.data;
         }
 
-        //Если элементы передались, то размер будет больше 0, возвращаем true
-        if (c.size()>0) return true; else return false;
+        @Override
+        public boolean hasNext() {
+            if (cursor < size) return true;
+            return false;
+        }
+
+        @Override
+        public T next() {
+            if (cursor<size) {
+                T elem =  (T) data[cursor];
+                cursor++;
+                return elem;
+            }
+            return null;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    public static <T> boolean addAll(Collection<? super T> c, T... elements) {
+        DIYarrayList<? super T> diy_list = new DIYarrayList<>();
+        T[] elem = elements;
+        int count_elem = elem.length;
+
+        diy_list.data = new Object[count_elem];
+
+        int i=0;
+        while (i<count_elem) {
+            diy_list.add(elem[i]);
+            i++;
+        }
+
+        for (Object t:diy_list.data) {
+            c.add((T) t);
+        }
+
+        if (c.size()>0) {
+            return true; }else return false;
     }
 
     public static <T> void copy(List<? super T> dest, List<? extends T> src) {
-        //Создаем типизированный переборщик, согласно типу копируемого списка src
-        Iterator<? extends T> iterator = src.iterator();
-        int i = 0;
+        DIYarrayList<? extends T> src_list = new DIYarrayList<>();
+        src_list.data = new Object[src.size()];
+
+        int i=0;
+        while (i<src.size()) {
+            src_list.add(src.get(i));
+            i++;
+        }
+
+        Iterator src_itr = src_list.iterator();
+
+        i=0;
         try {
-            //По циклу бежим переборщиком и добавляем элементы в принимающий список
-            while (i<src.size()) {
-                dest.add(src.get(i));
-                iterator.next();
+            while (src_itr.hasNext()) {
+                dest.set(i,src.get(i));
                 i++;
             }
         } catch (IndexOutOfBoundsException ex) {
-            //Выводим ощибку, если в цикле произойдет выход за пределы
             ex.getMessage();
         }
     }
 
+
+    public static <T> void q_Sort (DIYarrayList<T> diy_arr, int first, int last, Comparator<? super T> c ) {
+        int middle = first + (last - first) / 2;
+
+        T elem = (T) diy_arr.data[middle];
+
+        int i = first, j = last;
+
+        while (i <= j) {
+            while (c.compare((T) diy_arr.data[i], elem)<0) {
+                i++;
+            }
+            while (c.compare((T) diy_arr.data[j], elem)>0) {
+                j--;
+            }
+            if (i <= j) {
+                T temp = (T) diy_arr.data[i];
+                diy_arr.data[i] = diy_arr.data[j];
+                diy_arr.data[j] = temp;
+                i++;
+                j--;
+            }
+        }
+        if (first < j) q_Sort(diy_arr, first, j, c);
+        if (last > i) q_Sort(diy_arr, i, last, c);
+
+    }
+
     public static <T> void sort(List<T> list, Comparator<? super T> c) {
-        //Передали список в массив mas
-        T[] mas = (T[]) list.toArray();
-        //Отсортировали по компаратору массив mas
-        Arrays.sort(mas, c);
+        DIYarrayList<T> diy_list = new DIYarrayList<>();
+        diy_list.data = new Object[list.size()];
+        diy_list.addAll(list);
 
-        //Заводим итератор для списка из параметра
-        ListIterator<T> listiterator = list.listIterator();
-        //Заводим типизированный массив, помещая туда mas
-        T[] mas_T = mas;
-        int count_mas = mas.length;
+        if (!diy_list.isEmpty()) {
+            q_Sort(diy_list, 0, diy_list.size-1, c);
+        } else return;
 
-        //Бежим по массиву и типизируем каждый элемент, передавая его в листитератор списка
-        for(int i = 0; i < count_mas; ++i) {
-            T e = (T) mas_T[i];
-            listiterator.next();
-            listiterator.set(e);
+
+        for (int i=0; i<diy_list.size(); i++) {
+            list.set(i,diy_list.get(i));
         }
     }
 
-
     @Override
     public int size() {
-        return 0;
+        return data.length;
     }
 
     @Override
     public boolean isEmpty() {
+        if (data.length==0) return true;
         return false;
     }
 
@@ -71,7 +144,8 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public Iterator iterator() {
-        return null;
+        iterator = new DIYiterator(this);
+        return iterator;
     }
 
     @Override
@@ -81,7 +155,9 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean add(Object o) {
-        return false;
+        data[size] = o;
+        size++;
+        return true;
     }
 
     @Override
@@ -91,12 +167,18 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean addAll(Collection collection) {
-        return false;
+        return this.addAll(this.size, collection);
     }
 
     @Override
     public boolean addAll(int i, Collection collection) {
-        return false;
+        if (collection.size()==0)  return false;
+        else
+            for (Object o:collection) {
+                this.add(o);
+            }
+        return true;
+
     }
 
     @Override
@@ -106,12 +188,12 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public T get(int i) {
-        return null;
+        return (T) data[i];
     }
 
     @Override
-    public Object set(int i, Object o) {
-        return null;
+    public T set(int i, Object o) {
+        return (T) (data[i]=o);
     }
 
     @Override
@@ -135,17 +217,17 @@ public class DIYarrayList<T> implements List<T> {
     }
 
     @Override
-    public ListIterator listIterator() {
+    public ListIterator<T> listIterator() {
         return null;
     }
 
     @Override
-    public ListIterator listIterator(int i) {
+    public ListIterator<T> listIterator(int i) {
         return null;
     }
 
     @Override
-    public List subList(int i, int i1) {
+    public List<T> subList(int i, int i1) {
         return null;
     }
 
@@ -165,7 +247,7 @@ public class DIYarrayList<T> implements List<T> {
     }
 
     @Override
-    public Object[] toArray(Object[] objects) {
-        return new Object[0];
+    public T[] toArray(Object[] objects) {
+        return (T[])new Object[0];
     }
 }
