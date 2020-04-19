@@ -1,3 +1,5 @@
+package ru.otus.chistova;
+
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -39,93 +41,6 @@ public class DIYarrayList<T> implements List<T> {
         }
     }
 
-    public static <T> boolean addAll(Collection<? super T> c, T... elements) {
-        DIYarrayList<? super T> diy_list = new DIYarrayList<>();
-        T[] elem = elements;
-        int count_elem = elem.length;
-
-        diy_list.data = new Object[count_elem];
-
-        int i=0;
-        while (i<count_elem) {
-            diy_list.add(elem[i]);
-            i++;
-        }
-
-        for (Object t:diy_list.data) {
-            c.add((T) t);
-        }
-
-        if (c.size()>0) {
-            return true; }else return false;
-    }
-
-    public static <T> void copy(List<? super T> dest, List<? extends T> src) {
-        DIYarrayList<? extends T> src_list = new DIYarrayList<>();
-        src_list.data = new Object[src.size()];
-
-        int i=0;
-        while (i<src.size()) {
-            src_list.add(src.get(i));
-            i++;
-        }
-
-        Iterator src_itr = src_list.iterator();
-
-        i=0;
-        try {
-            while (src_itr.hasNext()) {
-                dest.set(i,src.get(i));
-                i++;
-            }
-        } catch (IndexOutOfBoundsException ex) {
-            ex.getMessage();
-        }
-    }
-
-
-    public static <T> void q_Sort (DIYarrayList<T> diy_arr, int first, int last, Comparator<? super T> c ) {
-        int middle = first + (last - first) / 2;
-
-        T elem = (T) diy_arr.data[middle];
-
-        int i = first, j = last;
-
-        while (i <= j) {
-            while (c.compare((T) diy_arr.data[i], elem)<0) {
-                i++;
-            }
-            while (c.compare((T) diy_arr.data[j], elem)>0) {
-                j--;
-            }
-            if (i <= j) {
-                T temp = (T) diy_arr.data[i];
-                diy_arr.data[i] = diy_arr.data[j];
-                diy_arr.data[j] = temp;
-                i++;
-                j--;
-            }
-        }
-        if (first < j) q_Sort(diy_arr, first, j, c);
-        if (last > i) q_Sort(diy_arr, i, last, c);
-
-    }
-
-    public static <T> void sort(List<T> list, Comparator<? super T> c) {
-        DIYarrayList<T> diy_list = new DIYarrayList<>();
-        diy_list.data = new Object[list.size()];
-        diy_list.addAll(list);
-
-        if (!diy_list.isEmpty()) {
-            q_Sort(diy_list, 0, diy_list.size-1, c);
-        } else return;
-
-
-        for (int i=0; i<diy_list.size(); i++) {
-            list.set(i,diy_list.get(i));
-        }
-    }
-
     @Override
     public int size() {
         return data.length;
@@ -155,6 +70,13 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean add(Object o) {
+        if (size == data.length) {
+            Object[] newData;
+            newData = Arrays.copyOf(data, size);
+            data = newData;
+            System.out.println("Увеличили размер "+ data.length);
+
+        }
         data[size] = o;
         size++;
         return true;
