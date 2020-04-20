@@ -71,9 +71,8 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public boolean add(Object o) {
         if (size == data.length) {
-            Object[] newData = new Object[size*2];
-            newData = Arrays.copyOf(data, size);
-            data = newData;
+            int newSize = size+size>>1;
+            data = Arrays.copyOf(data, newSize);
         }
         data[size] = o;
         size++;
