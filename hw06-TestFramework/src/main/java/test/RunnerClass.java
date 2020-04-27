@@ -3,33 +3,17 @@ package test;
 import ru.otus.chistova.annotation.After;
 import ru.otus.chistova.annotation.Before;
 import ru.otus.chistova.annotation.Test;
-import test.BotClassTest;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 public class RunnerClass {
     private static Class clazz;
-    private static Constructor<BotClassTest> constructor = null;
     private static BotClassTest object =null;
     private static int testsCount = 0, testsPassed = 0;
+    private static final String USERNAME = "Вася";
 
     public static void main(String[] args)  {
         clazz = BotClassTest.class;
-        try {
-            constructor = clazz.getConstructor(String.class);
-            object = constructor.newInstance("name");
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
         //Запускаем runner тестов
         runTests();
     }
@@ -70,6 +54,7 @@ public class RunnerClass {
         for (int i = 0; i < list.size(); i++) {
             testsCount++;
             try {
+                object = new BotClassTest(USERNAME);
                 list.get(i).invoke(object);
                 testsPassed++;
             } catch (Exception ex) {
