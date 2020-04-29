@@ -11,6 +11,7 @@ public class RunnerClass {
     private static BotClassTest object =null;
     private static int testsCount = 0, testsPassed = 0;
     private static final String USERNAME = "Вася";
+    private static List<Method> methodsBefore, methodsTest, methodsAfter;
 
     public static void main(String[] args)  {
         clazz = BotClassTest.class;
@@ -21,9 +22,9 @@ public class RunnerClass {
     public static void runTests() {
         Method[] methods = clazz.getMethods();
         //Списки методов для последовательного запуска
-        List<Method> methodsBefore = new ArrayList<>();
-        List<Method> methodsTest = new ArrayList<>();
-        List<Method> methodsAfter = new ArrayList<>();
+        methodsBefore = new ArrayList<>();
+        methodsTest = new ArrayList<>();
+        methodsAfter = new ArrayList<>();
 
         //Перебираем все методы для определения их аннотаций и формирования списков методов
         for (int i = 0; i < methods.length; i++) {
@@ -39,9 +40,7 @@ public class RunnerClass {
                }
         }
         //Запуск списков методов
-        executeMethods((ArrayList<Method>) methodsBefore);
-        executeMethods((ArrayList<Method>) methodsTest);
-        executeMethods((ArrayList<Method>) methodsAfter);
+        executeMethods();
 
         System.out.println("Run tests: "+testsCount);
         System.out.println("Correct tests: "+testsPassed);
@@ -49,14 +48,26 @@ public class RunnerClass {
 
     }
 
-    public static void executeMethods(ArrayList<Method> list) {
-        //Выполняем все списки методов, согласно порядку
-        for (int i = 0; i < list.size(); i++) {
+    //Выполнение списков методов
+    public static void executeMethods() {
+
+
+        //Выполняем все списки методов Test
+        for (int i = 0; i < methodsTest.size(); i++) {
             testsCount++;
             try {
                 object = new BotClassTest(USERNAME);
-                list.get(i).invoke(object);
+                //Выполняем все тесты @Before
+                for (int j = 0; j < methodsBefore.size(); j++) {
+                    methodsBefore.get(j).invoke(object);
+               }
+
+                methodsTest.get(i).invoke(object);
                 testsPassed++;
+                //Выполняем все тесты @After
+                for (int j = 0; j < methodsAfter.size(); j++) {
+                    methodsAfter.get(j).invoke(object);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
