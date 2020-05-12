@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ErrorClass {
+
     public static void main(String[] args) throws InterruptedException {
         List<Long> list = new ArrayList<>();
             long i = 1000;
