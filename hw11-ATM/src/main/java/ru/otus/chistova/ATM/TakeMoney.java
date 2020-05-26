@@ -3,12 +3,12 @@ package ru.otus.chistova.ATM;
 import java.util.*;
 
 public class TakeMoney implements Operation  {
-    HashMap<Short, Integer> banknotes;
-    TreeMap<Short, Integer> treeBanknotes;
-    HashMap<Short, Integer> issue;
+    HashMap<Integer, Integer> banknotes;
+    TreeMap<Integer, Integer> treeBanknotes;
+    HashMap<Integer, Integer> issue;
     Integer sum=0;
 
-    public TakeMoney(HashMap<Short, Integer> banknotes, Integer sum) {
+    public TakeMoney(HashMap<Integer, Integer> banknotes, Integer sum) {
         this.banknotes = banknotes;
         this.sum = sum;
         //Сортируем HashMap по убыванию в treeBanknotes
@@ -31,11 +31,11 @@ public class TakeMoney implements Operation  {
         }
   }
     //Метод расчета выдачи
-    public HashMap<Short, Integer> doIssue() {
-        HashMap<Short, Integer> tmpIssue = new HashMap<>();
+    public HashMap<Integer, Integer> doIssue() {
+        HashMap<Integer, Integer> tmpIssue = new HashMap<>();
         int findSum = sum;
         for (Map.Entry entry: treeBanknotes.entrySet()) {
-            Short nominal = (Short) entry.getKey();
+            Integer nominal = (Integer) entry.getKey();
             int count = treeBanknotes.get(nominal);
 
             int i=1;
@@ -71,7 +71,7 @@ public class TakeMoney implements Operation  {
         public String printIssue(){
         String issueRezult="";
             for (Map.Entry entry: issue.entrySet()) {
-                Short nominal = (Short)entry.getKey();
+                Integer nominal = (Integer) entry.getKey();
                 int count = (int) entry.getValue();
                 if (count>0)
                 issueRezult += String.valueOf(count)+" по "+String.valueOf(nominal)+"\n";

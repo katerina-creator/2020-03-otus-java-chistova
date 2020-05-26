@@ -4,19 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CalcSum implements Operation  {
-    HashMap<Short, Integer> banknotes;
+    HashMap<Integer, Integer> banknotes;
 
-    public CalcSum(HashMap<Short, Integer> banknotes) {
+    public CalcSum(HashMap<Integer, Integer> banknotes) {
         this.banknotes = banknotes;
     }
 
     @Override
     public long doOperation() {
         long sum = 0;
-        Short key;
+        Integer key;
         Integer value;
         for (Map.Entry entry: banknotes.entrySet()) {
-            key = (Short) entry.getKey();
+            key = (Integer) entry.getKey();
             value = (Integer) entry.getValue();
             sum+= key*value;
         }

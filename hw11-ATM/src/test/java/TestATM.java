@@ -1,10 +1,11 @@
 
-import ru.otus.chistova.ATM.ATM;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import ru.otus.chistova.ATM.ATM;
+import ru.otus.chistova.ATM.Nominals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -16,14 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestATM {
 
     ATM atm;
-    private HashMap<Short, Integer> putBanknotes;
-
-    private static final short NOMINAL_1 = 50;
-    private static final short NOMINAL_2 = 100;
-    private static final short NOMINAL_3 = 500;
-    private static final short NOMINAL_4 = 1000;
-    private static final short NOMINAL_5 = 5000;
-    private static final short NOMINAL_6 = 2000;
+    private HashMap<Integer, Integer> putBanknotes;
 
     private static final int COUNT_1 = 3;
     private static final int COUNT_2 = 0;
@@ -48,19 +42,23 @@ public class TestATM {
     @Before
     public void setUp() {
         //Вносимые деньги
-        putBanknotes = new HashMap<Short, Integer>();
-        putBanknotes.put(NOMINAL_1, COUNT_1);
-        putBanknotes.put(NOMINAL_2, COUNT_2);
-        putBanknotes.put(NOMINAL_3, COUNT_3);
-        putBanknotes.put(NOMINAL_4, COUNT_4);
-        putBanknotes.put(NOMINAL_5, COUNT_5);
-        putBanknotes.put(NOMINAL_6, COUNT_6);
+        putBanknotes = new HashMap<Integer, Integer>();
+
+        putBanknotes.put(Nominals.NOMINAL_1.getNominal(), COUNT_1);
+        putBanknotes.put(Nominals.NOMINAL_2.getNominal(), COUNT_2);
+        putBanknotes.put(Nominals.NOMINAL_3.getNominal(), COUNT_3);
+        putBanknotes.put(Nominals.NOMINAL_4.getNominal(), COUNT_4);
+        putBanknotes.put(Nominals.NOMINAL_5.getNominal(), COUNT_5);
+        putBanknotes.put(Nominals.NOMINAL_6.getNominal(), COUNT_6);
+
 
         System.out.println(Thread.currentThread().getName());
         backup = System.out;
         bos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bos));
-        atm = new ATM();
+        atm = new ATM(Nominals.NOMINAL_1.getNominal(), Nominals.NOMINAL_2.getNominal(),
+                Nominals.NOMINAL_3.getNominal(), Nominals.NOMINAL_4.getNominal(),
+                Nominals.NOMINAL_5.getNominal());
     }
 
     @AfterEach

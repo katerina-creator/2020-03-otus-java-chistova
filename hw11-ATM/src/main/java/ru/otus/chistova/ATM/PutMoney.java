@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PutMoney implements Operation {
-    HashMap<Short, Integer> curBanknotes;
-    HashMap<Short, Integer> putBanknotes;
+    HashMap<Integer, Integer> curBanknotes;
+    HashMap<Integer, Integer> putBanknotes;
     CalcSum acceptBalance;
 
-    public PutMoney(HashMap<Short, Integer> curBanknotes, HashMap<Short, Integer> putBanknotes) {
+    public PutMoney(HashMap<Integer, Integer> curBanknotes, HashMap<Integer, Integer> putBanknotes) {
         this.curBanknotes = curBanknotes;
         this.putBanknotes = putBanknotes;
     }
@@ -21,7 +21,7 @@ public class PutMoney implements Operation {
                 //Если есть ячейка для таких банкнот
                 if (curBanknotes.containsKey(putKey)) {
                     int sumBanknotes = curBanknotes.get(putKey)+putBanknotes.get(putKey);
-                        curBanknotes.put((Short) putKey, sumBanknotes);
+                        curBanknotes.put((Integer) putKey, sumBanknotes);
                 }
             }
         //Считаем сумму внесенных банкнот
