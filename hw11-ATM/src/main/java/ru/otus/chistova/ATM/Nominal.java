@@ -1,6 +1,6 @@
 package ru.otus.chistova.ATM;
 
-public enum Nominals {
+public enum Nominal {
     NOMINAL_1(50),
     NOMINAL_2(100),
     NOMINAL_3(500),
@@ -9,7 +9,7 @@ public enum Nominals {
     NOMINAL_6(2000);
     private int nominal;
 
-    Nominals(int nominal) {
+    Nominal(int nominal) {
         this.nominal = nominal;
     }
 

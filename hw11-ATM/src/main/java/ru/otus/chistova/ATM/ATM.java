@@ -13,15 +13,15 @@ import java.util.HashMap;
  * Пользователь может попробовать снять деньги с банкомата
 **/
 public class ATM {
-    public static HashMap<Integer, Integer> banknotes;
-    public static HashMap<Integer, Integer> putBanknote;
+    public static HashMap<Nominal, Integer> banknotes;
+    public static HashMap<Nominal, Integer> putBanknote;
 
     /** Конструктор класса
      * Создает банкомат, который сможет принимать только те номиналы,
      * которые были переданы в качестве аргументов
      * **/
-    public ATM(Integer...args) {
-        banknotes = new HashMap<Integer, Integer> ();
+    public ATM(Nominal...args) {
+        banknotes = new HashMap<Nominal, Integer> ();
         for (short i = 0; i<args.length; i++) {
             banknotes.put(args[i],0);
         }
@@ -38,8 +38,9 @@ public class ATM {
     /** Метод внесения денег
      * Печатает, сколько денег было принято банкоматом, в соответствии
      * с номиналами купюр, которые принимает банкомат
-     * **/
-    public static void putMoney(HashMap<Integer, Integer> putBanknote) {
+     *
+     * @param putBanknote**/
+    public static void putMoney(HashMap<Nominal, Integer> putBanknote) {
         ATM.putBanknote = putBanknote;
         PutMoney put = new PutMoney(banknotes, putBanknote);
         System.out.println("Put money: " + put.doOperation());

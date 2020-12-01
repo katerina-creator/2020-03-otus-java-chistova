@@ -4,21 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CalcSum implements Operation  {
-    HashMap<Integer, Integer> banknotes;
+    HashMap<Nominal, Integer> banknotes;
 
-    public CalcSum(HashMap<Integer, Integer> banknotes) {
+    public CalcSum(HashMap<Nominal, Integer> banknotes) {
         this.banknotes = banknotes;
     }
 
     @Override
     public long doOperation() {
         long sum = 0;
-        Integer key;
+        Nominal key;
         Integer value;
         for (Map.Entry entry: banknotes.entrySet()) {
-            key = (Integer) entry.getKey();
+            key = (Nominal) entry.getKey();
             value = (Integer) entry.getValue();
-            sum+= key*value;
+            sum+= key.getNominal()*value;
         }
         return sum;
     }

@@ -3,12 +3,12 @@ package ru.otus.chistova.ATM;
 import java.util.*;
 
 public class TakeMoney implements Operation  {
-    HashMap<Integer, Integer> banknotes;
-    TreeMap<Integer, Integer> treeBanknotes;
-    HashMap<Integer, Integer> issue;
+    HashMap<Nominal, Integer> banknotes;
+    TreeMap<Nominal, Integer> treeBanknotes;
+    HashMap<Nominal, Integer> issue;
     Integer sum=0;
 
-    public TakeMoney(HashMap<Integer, Integer> banknotes, Integer sum) {
+    public TakeMoney(HashMap<Nominal, Integer> banknotes, Integer sum) {
         this.banknotes = banknotes;
         this.sum = sum;
         //Сортируем HashMap по убыванию в treeBanknotes
@@ -31,18 +31,18 @@ public class TakeMoney implements Operation  {
         }
   }
     //Метод расчета выдачи
-    public HashMap<Integer, Integer> doIssue() {
-        HashMap<Integer, Integer> tmpIssue = new HashMap<>();
+    public HashMap<Nominal, Integer> doIssue() {
+        HashMap<Nominal, Integer> tmpIssue = new HashMap<>();
         int findSum = sum;
         for (Map.Entry entry: treeBanknotes.entrySet()) {
-            Integer nominal = (Integer) entry.getKey();
+            Nominal nominal = (Nominal) entry.getKey();
             int count = treeBanknotes.get(nominal);
 
             int i=1;
             //Перебираем количество банкнот в ячейке, если они там есть
             if (count>0) {
                 while (i <= count) {
-                    long takeSum = nominal * i;
+                    long takeSum =  nominal.getNominal() * i;
                     //Если сумма не набрана, но купюры кончились
                     if ((takeSum <= findSum) && (i == count)) {
                         tmpIssue.put(nominal, i);
@@ -52,7 +52,7 @@ public class TakeMoney implements Operation  {
                     //Если взята лишняя купюра, выдаем из ячейки на 1 меньше и уменьшаем сумму выдачи на 1 номинал
                     if (takeSum > findSum) {
                         tmpIssue.put(nominal, i - 1);
-                        findSum -= takeSum - nominal;
+                        findSum -= takeSum - nominal.getNominal();
                         break;
                     }
 
