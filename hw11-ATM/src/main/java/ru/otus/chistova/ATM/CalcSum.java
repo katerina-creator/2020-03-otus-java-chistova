@@ -1,24 +1,17 @@
 package ru.otus.chistova.ATM;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class CalcSum implements Operation  {
-    HashMap<Nominal, Integer> banknotes;
+    Cell[] cells;
 
-    public CalcSum(HashMap<Nominal, Integer> banknotes) {
-        this.banknotes = banknotes;
+    public CalcSum(Cell[] cells) {
+        this.cells = cells;
     }
 
     @Override
     public long doOperation() {
-        long sum = 0;
-        Nominal key;
-        Integer value;
-        for (Map.Entry entry: banknotes.entrySet()) {
-            key = (Nominal) entry.getKey();
-            value = (Integer) entry.getValue();
-            sum+= key.getNominal()*value;
+       long sum = 0;
+        for (Cell cell:cells){
+            sum+=cell.nominal*cell.countBanknotes;
         }
         return sum;
     }

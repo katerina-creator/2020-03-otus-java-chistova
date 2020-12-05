@@ -1,82 +1,28 @@
 package ru.otus.chistova.ATM;
 
-import java.util.*;
-
 public class TakeMoney implements Operation  {
-    HashMap<Nominal, Integer> banknotes;
-    TreeMap<Nominal, Integer> treeBanknotes;
-    HashMap<Nominal, Integer> issue;
-    Integer sum=0;
+    long sum=0;
+    Cell[] atm;
 
-    public TakeMoney(HashMap<Nominal, Integer> banknotes, Integer sum) {
-        this.banknotes = banknotes;
+    public TakeMoney(Cell[] atm, Integer sum) {
+        this.atm = atm;
         this.sum = sum;
-        //Сортируем HashMap по убыванию в treeBanknotes
-        treeBanknotes = new TreeMap<>(Collections.reverseOrder());
-        treeBanknotes.putAll(banknotes);
     }
 
     @Override
     public long doOperation() {
-        CalcSum balance = new CalcSum(banknotes);
-        //Если денег в банкомате меньше запрашиваемой суммы, возвращаем 0
+        CalcSum balance = new CalcSum(atm);
         if ( balance.doOperation() < sum) return 0;
         else {
-            //Запускаем метод расчета выдачи
-            issue = doIssue();
-            if (issue==null) return 0;
-            CalcSum issueBalance = new CalcSum(issue);
-            long issueSum= issueBalance.doOperation();
-            return issueSum;
+            long issue =takeBanknotFromCell(atm[atm.length-1],atm.length-1, sum);
+            return issue;
         }
-  }
-    //Метод расчета выдачи
-    public HashMap<Nominal, Integer> doIssue() {
-        HashMap<Nominal, Integer> tmpIssue = new HashMap<>();
-        int findSum = sum;
-        for (Map.Entry entry: treeBanknotes.entrySet()) {
-            Nominal nominal = (Nominal) entry.getKey();
-            int count = treeBanknotes.get(nominal);
+    }
 
-            int i=1;
-            //Перебираем количество банкнот в ячейке, если они там есть
-            if (count>0) {
-                while (i <= count) {
-                    long takeSum =  nominal.getNominal() * i;
-                    //Если сумма не набрана, но купюры кончились
-                    if ((takeSum <= findSum) && (i == count)) {
-                        tmpIssue.put(nominal, i);
-                        findSum -= takeSum;
-                        break;
-                    }
-                    //Если взята лишняя купюра, выдаем из ячейки на 1 меньше и уменьшаем сумму выдачи на 1 номинал
-                    if (takeSum > findSum) {
-                        tmpIssue.put(nominal, i - 1);
-                        findSum -= takeSum - nominal.getNominal();
-                        break;
-                    }
+    public long takeBanknotFromCell(Cell cell, int curIndex, long gettingSum){
+        long curSum = cell.getSum(gettingSum);
+        if (gettingSum<=curSum) return gettingSum;
+            else return curSum+takeBanknotFromCell(atm[curIndex-1], curIndex-1, gettingSum-curSum);
 
-                    //Если сумма не набрана и еще есть купюры, берем следующую купюру
-                //    if ((takeSum < findSum) && (i < count))
-                        i++;
-                }
-            }
-            //Если вся сумма найдена, выходим
-            if (findSum==0) {return tmpIssue;}
-            }
-        return null;
-        }
-
-        //Напечатать результат выдачи
-        public String printIssue(){
-        String issueRezult="";
-            for (Map.Entry entry: issue.entrySet()) {
-                Integer nominal = (Integer) entry.getKey();
-                int count = (int) entry.getValue();
-                if (count>0)
-                issueRezult += String.valueOf(count)+" по "+String.valueOf(nominal)+"\n";
-            }
-            return issueRezult;
-        }
-
+    }
 }
