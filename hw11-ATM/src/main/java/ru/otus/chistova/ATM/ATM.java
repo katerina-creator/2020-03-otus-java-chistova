@@ -11,10 +11,6 @@ public class ATM {
     public static Cell[] atm;
     static Cell[] putBanknotes;
 
-    /** Конструктор класса
-     * Создает банкомат, который сможет принимать только те номиналы,
-     * которые были переданы в качестве аргументов
-     * **/
     public ATM(Nominal...args) {
         int countCell = args.length;
         atm = new Cell[countCell];
