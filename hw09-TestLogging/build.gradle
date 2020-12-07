@@ -1,0 +1,22 @@
+plugins {
+    // для поддержки java
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+dependencies {
+}
+
+task shadowProxyExercise(type: Jar, dependsOn: shadowJar) {
+    archiveBaseName.set('proxyExercise')
+    manifest {
+        attributes 'Main-Class': 'proxy.ProxyExercise'
+        attributes 'Premain-Class': 'proxy.Agent'
+    }
+    from zipTree(shadowJar.archiveFile)
+}
+
+tasks.build.dependsOn tasks.shadowProxyExercise
+
