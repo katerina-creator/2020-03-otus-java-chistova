@@ -1,8 +1,13 @@
 package proxy;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 
 public class Ioc {
@@ -22,15 +27,24 @@ public class Ioc {
             this.myClass = myClass;
         }
 
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            System.out.print("executed method: "+method.getName()+", param: ");
-            for (int i=0; i<args.length; i++){
-                if (i==args.length-1) System.out.println(args[i]);
-                else System.out.print(args[i]+", ");
+        public void printAutoLog(Method method, Object[] args) {
+            System.out.print("executed method: " + method.getName() + ", param: ");
+            for (int i = 0; i < args.length; i++) {
+                if (args == null) System.out.println(" ");
+                if (i == args.length - 1) System.out.println(args[i]);
+                else System.out.print(args[i] + ", ");
             }
-            return method.invoke(myClass, args);
         }
 
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Annotation annotation = method.getAnnotation(Log.class);
+            if (annotation!=null) {
+                printAutoLog(method,args);
+            }
+                return method.invoke(myClass, args);
+        }
     }
+
 }
+
