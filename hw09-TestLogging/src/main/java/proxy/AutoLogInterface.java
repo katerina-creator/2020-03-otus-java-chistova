@@ -2,7 +2,7 @@ package proxy;
 
 public interface AutoLogInterface {
 
-     void calculation();
+     void no_calculation();
 
      @Log
      void calculation(int param);
