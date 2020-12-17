@@ -2,25 +2,20 @@ package ru.otus.listener.homework;
 
 import ru.otus.model.Message;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 /** хранение состояния сообщения **/
 public class State {
-    List<Message> listMsg;
+    private final LinkedList<Message> listMsg;
 
     State(State state) {
         listMsg = state.listMsg;
     }
 
-    State(Message oldMsg, Message newMsg) {
-        listMsg = new ArrayList<>();
+    public State(Message oldMsg, Message newMsg) {
+        listMsg = new LinkedList<>();
         listMsg.add(oldMsg);
         listMsg.add(newMsg);
-    }
-
-    List<Message> getUpdateHistory() {
-        return listMsg;
     }
 
     @Override

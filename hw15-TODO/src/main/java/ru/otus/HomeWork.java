@@ -3,13 +3,15 @@ package ru.otus;
 import ru.otus.handler.ComplexProcessor;
 import ru.otus.listener.ListenerPrinter;
 import ru.otus.listener.homework.ListenerSaveMsg;
+import ru.otus.listener.homework.Originator;
 import ru.otus.model.Message;
 import ru.otus.model.ObjectForMessage;
 import ru.otus.processor.LoggerProcessor;
 import ru.otus.processor.homework.ProcessorChange11and12Fields;
 import ru.otus.processor.homework.ProcessorError;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeWork {
 
@@ -24,14 +26,6 @@ public class HomeWork {
 
 
     public static void main(String[] args) {
-        var processors = List.of(new ProcessorChange11and12Fields(),
-                new LoggerProcessor(new ProcessorError()));
-
-        var complexProcessor = new ComplexProcessor(processors, (ex) -> {});
-        var listenerSaveMsg = new ListenerSaveMsg();
-        var listenerPrinter = new ListenerPrinter();
-        complexProcessor.addListener(listenerPrinter);
-        complexProcessor.addListener(listenerSaveMsg);
 
         ObjectForMessage objectForMessage = new ObjectForMessage();
         List <String> data = new ArrayList<>();
@@ -45,8 +39,30 @@ public class HomeWork {
                 .field13(objectForMessage)
                 .build();
 
+        var processors = List.of(new ProcessorChange11and12Fields(),
+                new LoggerProcessor(new ProcessorError()));
+
+        Originator originator = new Originator();
+
+        var complexProcessor = new ComplexProcessor(processors, (ex) -> {});
+        var listenerSaveMsg = new ListenerSaveMsg(originator);
+        var listenerPrinter = new ListenerPrinter();
+        complexProcessor.addListener(listenerPrinter);
+        complexProcessor.addListener(listenerSaveMsg);
+
         var result = complexProcessor.handle(message);
         System.out.println("result:" + result);
+        System.out.println();
+
+        System.out.println(originator.restoreState().toString());
+        System.out.println();
+
+        result = complexProcessor.handle(result);
+        System.out.println("result:" + result);
+        System.out.println();
+
+        System.out.println( originator.restoreState().toString());
+        System.out.println();
 
         complexProcessor.removeListener(listenerPrinter);
         complexProcessor.removeListener(listenerSaveMsg);
