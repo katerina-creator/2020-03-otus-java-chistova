@@ -1,5 +1,5 @@
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.otus.model.Message;
 import ru.otus.processor.homework.ProcessorError;
 
