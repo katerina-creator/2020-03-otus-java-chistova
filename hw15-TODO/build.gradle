@@ -1,15 +1,21 @@
-﻿plugins {
+plugins {
     id 'java'
 }
+apply plugin: 'idea'
 
 sourceCompatibility = JavaVersion.VERSION_15
 targetCompatibility = JavaVersion.VERSION_15
 
-dependencies {
-    testImplementation ('org.junit.jupiter:junit-jupiter-engine')
-    testImplementation ('org.junit.jupiter:junit-jupiter-params')
+repositories {
+    mavenCentral()
 }
 
+dependencies {
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.16.0'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+}
 test {
     useJUnitPlatform()
     testLogging {

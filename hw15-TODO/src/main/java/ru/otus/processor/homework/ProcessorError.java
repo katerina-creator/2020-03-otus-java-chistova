@@ -12,7 +12,6 @@ public class ProcessorError implements Processor  {
         Date date = new Date();
         if (date.getSeconds()%2==0)
             throw new NullPointerException("Every even second...");
-            //System.out.println("Err");
         return message;
     }
 }

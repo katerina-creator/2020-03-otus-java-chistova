@@ -113,6 +113,10 @@ public class Message {
 
     @Override
     public String toString() {
+        ObjectForMessage newObject = new ObjectForMessage();
+        if (field13!=null) {
+            newObject.setData(field13.getData());
+        }
         return "Message{" +
                 "id=" + id +
                 ", field1='" + field1 + '\'' +
@@ -127,7 +131,7 @@ public class Message {
                 ", field10='" + field10 + '\'' +
                 ", field11='" + field11 + '\'' +
                 ", field12='" + field12 + '\'' +
-                ", field13='" + field13 + '\'' +
+                ", field13='" + newObject.toString() + '\'' +
                 '}';
     }
 
