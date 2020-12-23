@@ -10,3 +10,10 @@
 rootProject.name = '2020-03-otus-java-chistova'
 include 'hw01-gradle'
 include 'hw02-DIYarrayList'
+include 'hw06-TestFramework'
+include 'hw07-GarbageCollection'
+include 'hw09-TestLogging'
+include 'hw11-ATM'
+include 'hw15-TODO'
+
+
