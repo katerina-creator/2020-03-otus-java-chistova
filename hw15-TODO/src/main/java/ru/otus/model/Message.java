@@ -1,5 +1,9 @@
 package ru.otus.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Message {
     private final long id;
     private final String field1;
@@ -133,6 +137,22 @@ public class Message {
                 ", field12='" + field12 + '\'' +
                 ", field13='" + newObject.toString() + '\'' +
                 '}';
+    }
+
+    public Message clone(){
+        if (field13!=null) {
+            List<String> data = new ArrayList<>(field13.getData().size());
+            ObjectForMessage objectForMessage = new ObjectForMessage();
+            data.addAll(field13.getData());
+            objectForMessage.setData(data);
+
+            return new Message(id, getField1(), getField2(), getField3(), getField4(), getField5(),
+                    getField6(), getField7(), getField8(), getField9(), getField10(), getField11(),
+                    getField12(), objectForMessage);
+        }
+        else      return new Message(id, getField1(), getField2(), getField3(), getField4(), getField5(),
+                getField6(), getField7(), getField8(), getField9(), getField10(), getField11(),
+                getField12(), null);
     }
 
     public static class Builder {
